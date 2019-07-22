@@ -21,9 +21,6 @@ pipeline {
                     reuseNode true 
                 }
             }
-			environment {
-				CUR_DIR=sh(returnStdout: true, script: 'pwd').trim()
-			}
             steps {
                 echo "Prepare to build ..."
 				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
@@ -32,7 +29,11 @@ pipeline {
         }
         stage('Push docker') {
             steps {
-                sh "echo $PWD"
+                sh "cp ../keylist.json ."
+                sh "cp ../sample-config.conf ."
+                sh "commit=`git show --summary --oneline | cut -d ' ' -f 1`"
+                sh "docker rmi -f $(docker images --filter "dangling=true" -q)"
+                sh "docker build --build-arg commit=$commit . -t incognitochain/incognito"
             }
         }
     }
