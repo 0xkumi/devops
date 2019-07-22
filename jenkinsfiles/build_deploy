@@ -2,7 +2,7 @@ pipeline {
     agent {label 'docker'}
     environment {
         registry = "dungvanautonomous/incognito"
-        registryCredential = ‘dockerhub’
+        registryCredential = 'dockerhub'
     }
     stages {	
         
