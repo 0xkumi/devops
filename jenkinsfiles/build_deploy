@@ -26,11 +26,11 @@ pipeline {
 				)}"""
 				WORKDIR_1="""${sh(
 					returnStdout: true,
-					script: 'echo `pwd`/.cache1'
+					script: 'echo `pwd`/.cache'
 				)}"""
 				WORKDIR_2="""${sh(
 					returnStdout: true,
-					script: 'echo `pwd`/.cache2'
+					script: 'echo `pwd`/.cache'
 				)}"""
 			}
             steps {
