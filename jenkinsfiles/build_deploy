@@ -20,6 +20,10 @@ pipeline {
         }
         stage('Build') {
 			environment {
+				GOPATH="""${sh(
+					returnStdout: true,
+					script: 'echo `pwd`/gopath'
+				)}"""
 				WORKDIR_1="""${sh(
 					returnStdout: true,
 					script: 'echo `pwd`/.cache1'
