@@ -37,5 +37,10 @@ pipeline {
 				sh "env GOPATH=`echo -n $GOPATH` GOCACHE=`echo -n $WORKDIR` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
+        stage('Push docker') {
+            steps {
+                sh "ifconfig"
+            }
+        }
     }
 }
