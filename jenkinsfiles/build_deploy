@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Push docker') {
             environment {
-                COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", , returnStdout: true).trim()
+                COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
             }
             steps {
                 sh "cp ./keylist.json bin/."
@@ -46,16 +46,15 @@ pipeline {
                     testImage = docker.build(registry, "--build-arg commit=\${COMMIT} ./bin ")
                 }
             }
-            
         }
-        // stage('Deploy Image') {
-        //     steps{
-        //         script {
-        //             docker.withRegistry( '', registryCredential ) {
-        //                 dockerImage.push()
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        testImage.push()
+                    }
+                }
+            }
+        }
     }
 }
