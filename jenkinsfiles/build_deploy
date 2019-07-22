@@ -22,19 +22,12 @@ pipeline {
                 }
             }
 			environment {
-				GOPATH="""${sh(
-					returnStdout: true,
-					script: 'echo `pwd`/gopath'
-				)}"""
-				WORKDIR="""${sh(
-					returnStdout: true,
-					script: 'echo `pwd`/.cache'
-				)}"""
+				CUR_DIR=sh(returnStdout: true, script: 'pwd')}.trim()
 			}
             steps {
                 echo "Prepare to build ..."
-				sh "GOPATH=`echo -n ${PWD}/gopath` GOCACHE=`echo -n ${PWD}/.cache` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
-				sh "GOPATH=`echo -n ${PWD}/gopath` GOCACHE=`echo -n ${PWD}/.cache` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
+				sh "GOPATH=${CUR_DIR}/gopath GOCACHE=${CUR_DIR}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
+				sh "GOPATH=${CUR_DIR}/gopath GOCACHE=${CUR_DIR}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
         stage('Push docker') {
