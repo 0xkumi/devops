@@ -39,7 +39,9 @@ pipeline {
                 sh "cp ./sample-config.conf bin/."
                 sh "commit=`git show --summary --oneline | cut -d ' ' -f 1`"
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
-                def testImage = docker.build("dungvanautonomous/incognito", "--build-arg commit=\$commit ./bin ")
+                script {
+                    testImage = docker.build(registry, "--build-arg commit=\$commit ./bin ")
+                }
             }
             
         }
