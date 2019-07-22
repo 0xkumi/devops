@@ -31,8 +31,8 @@ pipeline {
 			}
             steps {
                 echo "Prepare to build ..."
-				sh "env GOCACHE=\"$WORKDIR_1\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito *.go"
-				sh "env GOCACHE=\"$WORKDIR_2\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bootnode ./bootnode/*.go"
+				sh "env GOCACHE=\"$WORKDIR_1\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
+				sh "env GOCACHE=\"$WORKDIR_2\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
     }
