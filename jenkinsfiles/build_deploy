@@ -20,7 +20,7 @@ pipeline {
                 ])
             }
         }
-        stage('Build') {
+        stage('Build exe file') {
             agent {
                 docker { 
                     image 'golang:1.12.7-stretch'
@@ -33,7 +33,7 @@ pipeline {
 				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
-        stage('Build & docker') {
+        stage('Build & push docker') {
             environment {
                 COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
             }
