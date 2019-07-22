@@ -33,8 +33,8 @@ pipeline {
 			}
             steps {
                 echo "Prepare to build ..."
-				sh "env GOPATH=`echo -n $GOPATH` GOCACHE=`echo -n $WORKDIR` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
-				sh "env GOPATH=`echo -n $GOPATH` GOCACHE=`echo -n $WORKDIR` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
+				sh "env GOPATH=`echo -n $PWD/gopath` GOCACHE=`echo -n $PWD/.cache` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
+				sh "env GOPATH=`echo -n $PWD/gopath` GOCACHE=`echo -n $PWD/.cache` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
         stage('Push docker') {
