@@ -1,23 +1,26 @@
 pipeline {
-	agent {
-			docker { image 'golang:1.12.7-stretch' }
-	}
+	
     stages {	
+        agent {
+            label 'docker'
+        }
         stage('Checkout') {
             steps {
                 echo "Checkout version ${params.tag}"
                 checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "refs/tags/${params.tag}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
+                    $class: 'GitSCM',
+                    branches: [[name: "refs/tags/${params.tag}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
                 ])
             }
         }
         stage('Build') {
-			
+            agent {
+                docker { image 'golang:1.12.7-stretch' }
+            }
 			environment {
 				GOPATH="""${sh(
 					returnStdout: true,
