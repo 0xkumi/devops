@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+        agent { label 'docker' }
+        docker { image 'golang' }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checkout version ${params.tag}"
+                checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "refs/tags/${params.tag}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
+                ])
+            }
+        }
+    }
+}
+~
