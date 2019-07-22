@@ -20,15 +20,19 @@ pipeline {
         }
         stage('Build') {
 			environment {
-				WORKDIR="""${sh(
+				WORKDIR_1="""${sh(
 					returnStdout: true,
-					script: 'echo `pwd`/.cache'
+					script: 'echo `pwd`/.cache1'
+				)}"""
+				WORKDIR_2="""${sh(
+					returnStdout: true,
+					script: 'echo `pwd`/.cache2'
 				)}"""
 			}
             steps {
                 echo "Prepare to build ..."
-				sh "env GOCACHE=\"$WORKDIR\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito *.go"
-				sh "env GOCACHE=\"$WORKDIR\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bootnode ./bootnode/*.go"
+				sh "env GOCACHE=\"$WORKDIR_1\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito *.go"
+				sh "env GOCACHE=\"$WORKDIR_2\" CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bootnode ./bootnode/*.go"
             }
         }
     }
