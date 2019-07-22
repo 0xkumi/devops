@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Push docker') {
             steps {
-                sh "echo "
+                sh "echo $PWD"
             }
         }
     }
