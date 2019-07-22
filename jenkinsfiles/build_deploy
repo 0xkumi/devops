@@ -32,7 +32,7 @@ pipeline {
                 sh "cp ../keylist.json ."
                 sh "cp ../sample-config.conf ."
                 sh "commit=`git show --summary --oneline | cut -d ' ' -f 1`"
-                sh "docker rmi -f $(docker images --filter \"dangling=true\" -q)"
+                sh "docker rmi -f \$(docker images --filter \"dangling=true\" -q)"
                 sh "docker build --build-arg commit=$commit . -t incognitochain/incognito"
             }
         }
