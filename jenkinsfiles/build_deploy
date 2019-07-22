@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker { 
 			image 'golang:1.12.7-stretch' 
-			args "-e GOCACHE=/home/jenkins/workspace/Incognito Testnet"
 		}
     }
     stages {
@@ -22,8 +21,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Prepare to build ..."
-				sh "env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito ../*.go"
-				sh "env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bootnode ../bootnode/*.go"
+				sh "env GOCACHE=$PWD CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito ../*.go"
+				sh "env GOCACHE=$PWD CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bootnode ../bootnode/*.go"
             }
         }
     }
