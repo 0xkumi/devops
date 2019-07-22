@@ -1,10 +1,11 @@
 pipeline {
 	
     stages {	
-        agent {
-            label 'docker'
-        }
+        
         stage('Checkout') {
+            agent {
+                label 'docker'
+            }
             steps {
                 echo "Checkout version ${params.tag}"
                 checkout([
