@@ -22,7 +22,7 @@ pipeline {
                 }
             }
 			environment {
-				CUR_DIR=sh(returnStdout: true, script: 'pwd')}.trim()
+				CUR_DIR=sh(returnStdout: true, script: 'pwd').trim()
 			}
             steps {
                 echo "Prepare to build ..."
