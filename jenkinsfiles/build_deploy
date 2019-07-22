@@ -3,6 +3,7 @@ pipeline {
     environment {
         registry = "dungvanautonomous/incognito"
         registryCredential = 'dockerhub'
+        dockerImage = ''
     }
     stages {	
         
@@ -38,8 +39,9 @@ pipeline {
                 sh "cp ./sample-config.conf bin/."
                 sh "commit=`git show --summary --oneline | cut -d ' ' -f 1`"
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
-                sh "cd bin && docker build --build-arg commit=\$commit . -t dungvanautonomous/incognito"
+                def testImage = docker.build("dungvanautonomous/incognito", "--build-arg commit=\$commit ./bin ")
             }
+            
         }
         stage('Deploy Image') {
             steps{
