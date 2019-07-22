@@ -1,6 +1,11 @@
 pipeline {
     agent {label 'docker'}
+    environment {
+        registry = "dungvanautonomous/incognito"
+        registryCredential = ‘dockerhub’
+    }
     stages {	
+        
         stage('Checkout') {
             steps {
                 echo "Checkout version ${params.tag}"
@@ -33,7 +38,16 @@ pipeline {
                 sh "cp ./sample-config.conf bin/."
                 sh "commit=`git show --summary --oneline | cut -d ' ' -f 1`"
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
-                sh "cd bin && docker build --build-arg commit=\$commit . -t incognitochain/incognito"
+                sh "cd bin && docker build --build-arg commit=\$commit . -t dungvanautonomous/incognito"
+            }
+        }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
