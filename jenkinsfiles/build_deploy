@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'golang:1.12.7-stretch' }
+        docker { 
+			image 'golang:1.12.7-stretch' 
+			args "-e GOCACHE=off"
+		}
     }
     stages {
         stage('Checkout') {
