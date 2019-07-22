@@ -1,7 +1,8 @@
 pipeline {
-    agent {label "docker"}
-	
-    stages {
+	agent {
+			docker { image 'golang:1.12.7-stretch' }
+	}
+    stages {	
         stage('Checkout') {
             steps {
                 echo "Checkout version ${params.tag}"
@@ -16,9 +17,7 @@ pipeline {
             }
         }
         stage('Build') {
-			agent {
-				docker { image 'golang:1.12.7-stretch' }
-			}
+			
 			environment {
 				GOPATH="""${sh(
 					returnStdout: true,
