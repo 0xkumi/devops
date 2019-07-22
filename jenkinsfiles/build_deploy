@@ -39,7 +39,7 @@ pipeline {
         }
         stage('Push docker') {
             steps {
-                sh "ifconfig"
+                sh "env"
             }
         }
     }
