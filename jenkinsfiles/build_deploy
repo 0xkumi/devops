@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Deploy incognito') {
             steps {
-                build(job: "Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'clear', value:"${params.clear}"), string(name: 'nodes', value:"${params.nodes}")] )
+                build(job: "Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'tag', value:"${params.tag}"), string(name: 'clear', value:"${params.clear}"), string(name: 'nodes', value:"${params.nodes}")] )
             }
         }
     }
