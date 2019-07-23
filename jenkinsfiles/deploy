@@ -1,0 +1,8 @@
+pipeline {
+    agent {label 'docker'}
+    stages {	
+        stage('Run another job') {
+            build(job: "Build_IncognitoTestnet", wait: true, parameters: "20190722_4")
+        }
+    }
+}
