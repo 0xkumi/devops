@@ -3,7 +3,7 @@ pipeline {
     stages {	
         stage('Build incognito') {
             steps {
-                echo $params
+                echo params
                 build(job: "Build_IncognitoTestnet", wait: true, parameters: [string(name: 'tag', value:"${params.tag}")] )
             }
         }
