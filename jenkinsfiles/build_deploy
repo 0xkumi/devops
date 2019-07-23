@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Deploy incognito') {
             steps {
-                
+                build(job: "Deploy_IncognitoTestnet", wait: true )
             }
         }
     }
