@@ -3,12 +3,12 @@ pipeline {
     stages {	
         stage('Build incognito') {
             steps {
-                build(job: "Build_IncognitoTestnet", wait: true )
+                build(job: "Build_IncognitoTestnet", wait: true, parameters: [string(name: 'tag', value:"${params.tag}")] )
             }
         }
         stage('Deploy incognito') {
             steps {
-                build(job: "Deploy_IncognitoTestnet", wait: true )
+                build(job: "Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'clear', value:"${params.clear}"), string(name: 'nodes', value:"${params.nodes}")] )
             }
         }
     }
