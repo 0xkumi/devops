@@ -3,7 +3,7 @@ pipeline {
     stages {	
         stage('Run another job') {
             steps {
-                build(job: "Build_IncognitoTestnet", wait: true, parameters: "20190722_4")
+                build(job: "Build_IncognitoTestnet", wait: true, parameters: [string(name: 'tag', value:"20190722_4")] )
             }
             
         }
