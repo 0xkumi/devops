@@ -44,9 +44,13 @@ pipeline {
                 sh "commit="
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
-                    testImage = docker.build(registry + ":${params.tag}", "--build-arg commit=\${COMMIT} ./bin ")
+                    tagImage = docker.build(registry + ":${params.tag}", "--build-arg commit=\${COMMIT} ./bin ")
                     docker.withRegistry( '', registryCredential ) {
-                        testImage.push()
+                        tagImage.push()
+                    }
+                    latestImage = docker.build(registry, "--build-arg commit=\${COMMIT} ./bin ")
+                    docker.withRegistry( '', registryCredential ) {
+                        latestImage.push()
                     }
                 }
             }
