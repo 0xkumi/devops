@@ -1,11 +1,24 @@
 pipeline {
-    agent {label 'docker'}
-    stages {	
-        stage('Run another job') {
+    agent {label 'ansible'}
+    stages {
+        stage('Checkout') {
             steps {
-                build(job: "Build_IncognitoTestnet", wait: true )
+                echo "Checkout"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "*/master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/0xkumi/constant_deploy.git']]
+                ])
             }
-            
+        }	
+        stage('Pull docker image') {
+            steps {
+                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/deploy --limit deploy"
+            }
         }
+        
     }
 }
