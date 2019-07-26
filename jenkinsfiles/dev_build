@@ -34,6 +34,7 @@ pipeline {
 				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
         }
+
         stage('Build & push docker') {
             environment {
                 COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
@@ -41,7 +42,6 @@ pipeline {
             steps {
                 sh "cp ./keylist.json bin/."
                 sh "cp ./sample-config.conf bin/."
-                sh "commit="
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
                     devImage = docker.build(registry + ":dev", "--build-arg commit=\${COMMIT} ./bin ")

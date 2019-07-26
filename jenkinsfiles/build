@@ -41,7 +41,6 @@ pipeline {
             steps {
                 sh "cp ./keylist.json bin/."
                 sh "cp ./sample-config.conf bin/."
-                sh "commit="
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
                     tagImage = docker.build(registry + ":${params.tag}", "--build-arg commit=\${COMMIT} ./bin ")

@@ -1,0 +1,34 @@
+pipeline {
+    agent {label 'ansible'}
+    stages {
+        stage('Checkout Deploy Config') {
+            steps {
+                echo "Checkout"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "dev/master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/0xkumi/constant_deploy.git']]
+                ])
+            }
+        }	
+        stage('Pull image') {
+            steps {
+                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/deploy --extra-vars \"tag=dev\" --limit ${params.nodes} "
+            }
+        }
+        stage('Stop nodes') {
+            steps {
+                sh "ansible-playbook Ansible/stopFullNode.yml -i Ansible/inventories/deploy --limit ${params.nodes}"
+            }
+        }
+        stage('Run nodes') {
+            steps {
+                sh "ansible-playbook Ansible/deployServer.yml -i Ansible/inventories/deploy --extra-vars \"tag=dev\" --extra-vars \"clear=${params.clear}\" --limit ${params.nodes}"
+            }
+        }
+        
+    }
+}
