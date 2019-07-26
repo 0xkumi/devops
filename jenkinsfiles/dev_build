@@ -1,0 +1,55 @@
+pipeline {
+    agent {label 'docker'}
+    environment {
+        registry = "incognitochain/incognito"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+    stages {	
+        
+        stage('Checkout') {
+            steps {
+                echo "Checkout version ${params.tag}"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "dev/master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
+                ])
+                echo "Checkout finish"
+            }
+        }
+        stage('Build exe file') {
+            agent {
+                docker { 
+                    image 'golang:1.12.7-stretch'
+                    reuseNode true 
+                }
+            }
+            steps {
+                echo "Prepare to build ..."
+				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
+				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
+            }
+        }
+        stage('Build & push docker') {
+            environment {
+                COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
+            }
+            steps {
+                sh "cp ./keylist.json bin/."
+                sh "cp ./sample-config.conf bin/."
+                sh "commit="
+                sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
+                script {
+                    devImage = docker.build(registry + ":dev", "--build-arg commit=\${COMMIT} ./bin ")
+                    docker.withRegistry( '', registryCredential ) {
+                        devImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
