@@ -16,7 +16,7 @@ pipeline {
         }	
         stage('Pull image') {
             steps {
-                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/test --extra-vars \"tag=dev\" --limit ${params.nodes} "
+                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/test --extra-vars \"tag=dev\" --limit ${params.nodes}"
             }
         }
         stage('Stop nodes') {
