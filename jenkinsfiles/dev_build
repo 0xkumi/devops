@@ -9,7 +9,7 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                echo "Checkout version ${params.tag}"
+                echo "Checkout version dev/master"
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: "dev/master"]],
