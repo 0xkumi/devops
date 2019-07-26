@@ -16,17 +16,17 @@ pipeline {
         }	
         stage('Pull image') {
             steps {
-                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/deploy --extra-vars \"tag=dev\" --limit ${params.nodes} "
+                sh "ansible-playbook Ansible/docker.yml -i Ansible/inventories/test --extra-vars \"tag=dev\" --limit ${params.nodes} "
             }
         }
         stage('Stop nodes') {
             steps {
-                sh "ansible-playbook Ansible/stopFullNode.yml -i Ansible/inventories/deploy --limit ${params.nodes}"
+                sh "ansible-playbook Ansible/stopFullNode.yml -i Ansible/inventories/test --limit ${params.nodes}"
             }
         }
         stage('Run nodes') {
             steps {
-                sh "ansible-playbook Ansible/deployServer.yml -i Ansible/inventories/deploy --extra-vars \"tag=dev\" --extra-vars \"clear=${params.clear}\" --limit ${params.nodes}"
+                sh "ansible-playbook Ansible/deployServer.yml -i Ansible/inventories/test --extra-vars \"tag=dev\" --extra-vars \"clear=${params.clear}\" --limit ${params.nodes}"
             }
         }
         
