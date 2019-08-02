@@ -1,0 +1,55 @@
+pipeline {
+    agent {label 'docker && ansible'}
+    environment {
+        registry = "incognitochain/incognito"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checkout version dev/master"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "dev/master"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
+                ])
+                echo "Checkout finish"
+            }
+        }
+        stage('Build test file') {
+            agent {
+                docker { 
+                    image 'golang:1.12.7-stretch'
+                    reuseNode true 
+                }
+            }
+            steps {
+                echo "Prepare to build test ..."
+                sh "CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito-test ./tests/*.go"
+            }
+        }
+        stage('Run test crossshard') {
+            steps {
+                build(job: "Dev_Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'clear', value:"y"), string(name: 'nodes', value:"test")] )
+                sh "ENV=testnet ./tests/incognito-test crossshard"
+            }
+        }
+        stage('Run test tx') {
+            steps {
+                build(job: "Dev_Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'clear', value:"y"), string(name: 'nodes', value:"test")] )
+                sh "ENV=testnet ./tests/incognito-test transaction"
+            }
+        }
+        stage('Run test stake') {
+            steps {
+                build(job: "Dev_Deploy_IncognitoTestnet", wait: true, parameters: [string(name: 'clear', value:"y"), string(name: 'nodes', value:"test")] )
+                sh "ENV=testnet ./tests/incognito-test take"
+            }
+        }
+        
+    }
+}
