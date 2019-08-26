@@ -30,8 +30,6 @@ pipeline {
             }
             steps {
                 echo "Prepare to build ..."
-                sh "cp ./blockchain/testparams/paramstest ./blockchain/params.go"
-                sh "cp ./blockchain/testparams/constantstest ./blockchain/constants.go"
 				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
 				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
             }
