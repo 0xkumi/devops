@@ -9,10 +9,10 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                echo "Checkout version dev/master"
+                echo "Checkout version consensus-module"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "dev/master"]],
+                    branches: [[name: "consensus-module"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],
