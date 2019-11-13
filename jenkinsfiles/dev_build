@@ -9,10 +9,10 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                echo "Checkout version master-temp-B-deploy-info-tx"
+                echo "Checkout branch ${params.branch}"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "master-temp-B-deploy-info-tx"]],
+                    branches: [[name: "${params.branch}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],

@@ -4,7 +4,7 @@ pipeline {
         stage('Build incognito') {
             steps {
                 echo "${params}"
-                build(job: "Dev_Build_IncognitoTestnet", wait: true )
+                build(job: "Dev_Build_IncognitoTestnet", wait: true , parameters: [string(name: 'branch', value:"${params.branch}")])
             }
         }
         stage('Deploy incognito') {
