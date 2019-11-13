@@ -9,10 +9,10 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                echo "Checkout version new-privacy-dev"
+                echo "Checkout version master-temp-B-deploy-info-tx"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "new-privacy-dev"]],
+                    branches: [[name: "master-temp-B-deploy-info-tx"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],
