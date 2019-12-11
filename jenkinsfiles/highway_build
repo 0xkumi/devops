@@ -7,7 +7,7 @@ pipeline {
     }
     stages {	
         environment {
-            branch = "${env.VersionType == \"branch\" ? \${params.value} : \"refs/tags/${params.value}\"}"
+            branch = "${env.VersionType == "branch" ? ${params.value} : "refs/tags/${params.value}"}"
         }
         stage('Checkout') {
             steps {
