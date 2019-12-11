@@ -40,8 +40,8 @@ pipeline {
                 COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
             }
             steps {
-                sh "cp ./keylist.json incognito/bin/."
-                sh "cp ./sample-config.conf incognito/bin/."
+                sh "cp incognito/keylist.json incognito/bin/."
+                sh "cp incognito/sample-config.conf incognito/bin/."
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
                     devImage = docker.build(registry + ":dev", "--build-arg commit=\${COMMIT} ./incognito/bin ")
