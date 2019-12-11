@@ -1,0 +1,16 @@
+pipeline {
+    agent {label 'docker && ansible'}
+    stages {	
+        stage('Build incognito') {
+            steps {
+                echo "${params}"
+                build(job: "Highway_Testnet_build", wait: true , parameters: [string(name: 'branch', value:"${params.branch}")])
+            }
+        }
+        stage('Deploy incognito') {
+            steps {
+                build(job: "Highway_Testnet_build", wait: true, parameters: [string(name: 'clear', value:"${params.clear}"), string(name: 'nodes', value:"${params.nodes}")] )
+            }
+        }
+    }
+}

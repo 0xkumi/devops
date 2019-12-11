@@ -6,13 +6,15 @@ pipeline {
         dockerImage = ''
     }
     stages {	
-        
+        environment {
+            branch = "${env.VersionType == \"branch\" ? \${params.value} : \"refs/tags/${params.value}\"}"
+        }
         stage('Checkout') {
             steps {
                 echo "Checkout version ${params.tag}"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "refs/tags/${params.tag}"]],
+                    branches: [[name: "${branch}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],
