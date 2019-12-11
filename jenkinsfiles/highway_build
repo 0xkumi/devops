@@ -12,10 +12,10 @@ pipeline {
                 branch = "${params.VersionType == "Branch" ? ${params.value} : "refs/tags/${params.value}"}"
             }
             steps {
-                echo "Checkout version ${branch}"
+                echo "Checkout version \${branch}"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: ${branch}]],
+                    branches: [[name: "\${branch}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],
