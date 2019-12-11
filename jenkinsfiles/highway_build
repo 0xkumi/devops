@@ -42,10 +42,6 @@ pipeline {
                     docker.withRegistry( '', registryCredential ) {
                         tagImage.push()
                     }
-                    latestImage = docker.build(registry, "./bin ")
-                    docker.withRegistry( '', registryCredential ) {
-                        latestImage.push()
-                    }
                 }
             }
         }
