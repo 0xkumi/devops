@@ -30,7 +30,7 @@ pipeline {
             }
             steps {
                 echo "Prepare to build ..."
-				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/highway *.go"
+				sh "GO111MODULE=on GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/highway *.go"
             }
         }
         stage('Build & push docker') {
