@@ -30,8 +30,8 @@ pipeline {
             }
             steps {
                 echo "Prepare to build ..."
-				sh "GO111MODULE=on GOPATH=${WORKSPACE}/incognito/gopath GOCACHE=${WORKSPACE}/incognito/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito/bin/incognito incognito/*.go"
-				sh "GO111MODULE=on GOPATH=${WORKSPACE}/incognito/gopath GOCACHE=${WORKSPACE}/incognito/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito/bin/bootnode incognito/bootnode/*.go"
+				sh "cd incognito/ && GO111MODULE=on GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
+				sh "cd incognito/ && GO111MODULE=on GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode bootnode/*.go"
             }
         }
 
