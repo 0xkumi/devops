@@ -14,7 +14,8 @@ pipeline {
                     $class: 'GitSCM',
                     branches: [[name: "${params.branch}"]],
                     doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
+                    extensions: [[$class: 'RelativeTargetDirectory', 
+                    relativeTargetDir: 'incognito']], 
                     submoduleCfg: [],
                     userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-chain']]
                 ])
@@ -30,8 +31,8 @@ pipeline {
             }
             steps {
                 echo "Prepare to build ..."
-				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/incognito *.go"
-				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/bootnode ./bootnode/*.go"
+				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito/bin/incognito incognito/*.go"
+				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o incognito/bin/bootnode incognito/bootnode/*.go"
             }
         }
 
@@ -40,11 +41,11 @@ pipeline {
                 COMMIT = sh(script: "git show --summary --oneline | cut -d ' ' -f 1", returnStdout: true).trim()
             }
             steps {
-                sh "cp ./keylist.json bin/."
-                sh "cp ./sample-config.conf bin/."
+                sh "cp ./keylist.json incognito/bin/."
+                sh "cp ./sample-config.conf incognito/bin/."
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
-                    devImage = docker.build(registry + ":dev", "--build-arg commit=\${COMMIT} ./bin ")
+                    devImage = docker.build(registry + ":dev", "--build-arg commit=\${COMMIT} ./incognito/bin ")
                     docker.withRegistry( '', registryCredential ) {
                         devImage.push()
                     }
