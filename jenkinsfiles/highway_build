@@ -9,10 +9,10 @@ pipeline {
        
         stage('Checkout') {
             environment {
-                branch = "${env.VersionType == "branch" ? ${params.value} : "refs/tags/${params.value}"}"
+                branch = "${params.VersionType == "branch" ? ${params.value} : "refs/tags/${params.value}"}"
             }
             steps {
-                echo "Checkout version ${params.tag}"
+                echo "Checkout version ${branch}"
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: "${branch}"]],
@@ -41,7 +41,7 @@ pipeline {
                 sh "cp ./keylist.json bin/."
                 sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
                 script {
-                    tagImage = docker.build(registry + ":${params.tag}", "./bin ")
+                    tagImage = docker.build(registry + ":${params.value}", "./bin ")
                     docker.withRegistry( '', registryCredential ) {
                         tagImage.push()
                     }
