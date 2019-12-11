@@ -6,7 +6,6 @@ pipeline {
         dockerImage = ''
     }
     stages {	
-       
         stage('Checkout') {
             environment {
                 branch = "${params.VersionType == "Branch" ? params.value : "refs/tags/params.value"}"
