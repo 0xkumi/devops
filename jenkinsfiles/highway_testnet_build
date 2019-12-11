@@ -1,0 +1,53 @@
+pipeline {
+    agent {label 'docker'}
+    environment {
+        registry = "incognitochain/incognito-highway"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
+    stages {	
+        
+        stage('Checkout') {
+            steps {
+                echo "Checkout version ${params.tag}"
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "refs/tags/${params.tag}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[url: 'https://github.com/incognitochain/incognito-highway']]
+                ])
+                echo "Checkout finish"
+            }
+        }
+        stage('Build exe file') {
+            agent {
+                docker { 
+                    image 'golang:1.12.7-stretch'
+                    reuseNode true 
+                }
+            }
+            steps {
+                echo "Prepare to build ..."
+				sh "GOPATH=${WORKSPACE}/gopath GOCACHE=${WORKSPACE}/.cache CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-w' -o bin/highway *.go"
+            }
+        }
+        stage('Build & push docker') {
+            steps {
+                sh "cp ./keylist.json bin/."
+                sh "docker rmi -f `docker images --filter \"dangling=true\" -q` || echo 1"
+                script {
+                    tagImage = docker.build(registry + ":${params.tag}", "./bin ")
+                    docker.withRegistry( '', registryCredential ) {
+                        tagImage.push()
+                    }
+                    latestImage = docker.build(registry, "./bin ")
+                    docker.withRegistry( '', registryCredential ) {
+                        latestImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
