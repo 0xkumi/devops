@@ -15,7 +15,7 @@ pipeline {
                 echo "Checkout version ${branch}"
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: "\${branch}"]],
+                    branches: [[name: "${branch}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     submoduleCfg: [],
