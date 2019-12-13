@@ -8,7 +8,7 @@ pipeline {
     stages {	
         stage('Checkout') {
             environment {
-                branch = "${params.VersionType == "Branch" ? params.value : \"refs/tags/params.value\"}"
+                branch = "${params.VersionType == "Branch" ? "" : "refs/tags/"}" + ${params.value}
             }
             steps {
                 echo "Checkout version ${branch}"
