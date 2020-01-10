@@ -16,7 +16,7 @@ pipeline {
         }	
         stage('Run nodes') {
             steps {
-                sh "ansible-playbook Ansible/deployBootNode.yml -i Ansible/inventories/deploy --extra-vars \"tag=${params.tag}\"  --limit boot"
+                sh "ansible-playbook Ansible/deployBootNode.yml -i Ansible/inventories/deploy --extra-vars \"tag=${params.tag}\"  --limit highway"
             }
         }
         
