@@ -24,7 +24,7 @@ pipeline {
         stage('Build exe file') {
             agent {
                 docker { 
-                    image 'golang:1.12.7-stretch'
+                    image 'golang:1.13.8-stretch'
                     reuseNode true 
                 }
             }
