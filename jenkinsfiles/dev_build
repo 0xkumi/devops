@@ -1,7 +1,7 @@
 pipeline {
     agent {label 'docker'}
     environment {
-        registry = "incognitochain/incognito"
+        registry = "incognitochaintestnet/incognito"
         registryCredential = 'dockerhub'
         dockerImage = ''
     }
